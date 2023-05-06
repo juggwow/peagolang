@@ -1,45 +1,36 @@
 package main
 
 import (
-	"net/http"
+	"log"
 
 	"github.com/gin-gonic/gin"
+
+	"github.com/juggwow/peagolang/db"
+	"github.com/juggwow/peagolang/handler"
 )
 
-type Course struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"desc"`
-}
-
-var courses = []Course{
-	{ID: "1", Name: "TDD", Description: "fdsafdasfdsfasdfasdfasdfasdgawefqfasga"},
-	{ID: "2", Name: "CI&CD", Description: "qwerqwerqwerqwerqwerqwerqwerqwtwrqq"},
-}
-
 func main() {
+	db, err := db.NewDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	r := gin.Default()
 
-	//courses
-	r.GET("/courses", listCourses)
-	r.GET("/courses/:id", getCourses)
+	r.GET("/courses", handler.ListCourses(db))
+	r.GET("/courses/:id", handler.GetCourse(db))
+	r.POST("/courses", handler.CreateCourse(db))
+	r.POST("/classes", handler.CreateClasses(db))
+	r.POST("/enrollments", handler.EnrollClass(db))
+	r.POST("/register", handler.Register(db))
+	r.POST("/login", handler.Login(db))
 
 	r.Run(":8080")
 }
 
-func listCourses(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, courses)
-}
-
-func getCourses(c *gin.Context) {
-	id := c.Param("id")
-	for _, course := range courses {
-		if course.ID == id {
-			c.IndentedJSON(http.StatusOK, course)
-			return
-		}
-	}
-
-	c.IndentedJSON(http.StatusNotFound, gin.H{"massage": "not found"})
-
+func Error(c *gin.Context, status int, err error) {
+	log.Println(err)
+	c.JSON(status, gin.H{
+		"message": err.Error(),
+	})
 }

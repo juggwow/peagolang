@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  postgresql:
+    image: postgres:12
+    restart: always
+    environment:
+      - POSTGRES_USER=peagolang
+      - POSTGRES_PASSWORD=supersecret
+      - POSTGRES_DB=peagolang
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    ports:
+      - "54329:5432"
