@@ -36,7 +36,7 @@ pipeline {
 
                             ssh -o StrictHostKeyChecking=no -l ubuntu 13.229.66.4 \"
                                 cd patna/api/
-                                docker 
+                                docker compose -f docker-compose.yml down
                                 docker compose -f docker-compose.yml up -d
                             \"
                         """
