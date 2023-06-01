@@ -35,8 +35,8 @@ pipeline {
                             scp docker-compose.yml ubuntu@13.229.66.4:patna/api/
 
                             ssh -o StrictHostKeyChecking=no -l ubuntu 13.229.66.4 \"
+                                docker image rm -f patna/api
                                 cd patna/api/
-                                docker compose -f docker-compose.yml down
                                 docker compose -f docker-compose.yml up -d
                             \"
                         """
