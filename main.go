@@ -55,7 +55,7 @@ func Gettest() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		c.IndentedJSON(http.StatusOK, gin.H{
-			"token": "Hello world form server",
+			"token": "Hello Hello",
 		})
 
 	}
