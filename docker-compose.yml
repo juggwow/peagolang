@@ -6,7 +6,7 @@ services:
     image: patna/api
     restart: always
     environment:
-      DATABASE_URL: "host=postgresql user=peagolang password=supersecret dbname=peagolang sslmode=disable"
+      DATABASE_URL: "host=postgresql user=patnagolang password=supersecretpatnagolang dbname=patnapostgresqldb sslmode=disable"
     ports:
       - "8624:8624"
     depends_on:
@@ -18,9 +18,9 @@ services:
     image: postgres:12
     restart: always
     environment:
-      - POSTGRES_USER=peagolang
-      - POSTGRES_PASSWORD=supersecret
-      - POSTGRES_DB=peagolang
+      - POSTGRES_USER=patnagolang
+      - POSTGRES_PASSWORD=supersecretpatnagolang
+      - POSTGRES_DB=patnapostgresqldb
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
     ports:

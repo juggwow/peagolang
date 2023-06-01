@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 
@@ -38,6 +39,8 @@ func main() {
 	r.POST("/register", handler.Register(db)) //
 	r.POST("/login", handler.Login(db))       //
 
+	r.GET("/test", Gettest()) //
+
 	r.Run(":8624")
 }
 
@@ -46,4 +49,14 @@ func Error(c *gin.Context, status int, err error) {
 	c.JSON(status, gin.H{
 		"message": err.Error(),
 	})
+}
+
+func Gettest() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		c.IndentedJSON(http.StatusOK, gin.H{
+			"token": "Hello world form server",
+		})
+
+	}
 }
