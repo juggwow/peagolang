@@ -6,7 +6,7 @@ services:
     image: patna/api:latest
     restart: always
     environment:
-      DATABASE_URL: "host=postgresql user=patnagolang password=supersecretpatnagolang dbname=patnapostgresqldb port=5432 sslmode=disable"
+      DATABASE_URL: "host=postgresql user=patnagolang password=supersecretpatnagolang dbname=patnapostgresqldb sslmode=disable"
     ports:
       - "8624:8624"
     depends_on:
@@ -22,7 +22,7 @@ services:
       - POSTGRES_PASSWORD=supersecretpatnagolang
       - POSTGRES_DB=patnapostgresqldb
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data
+      - ./data/postgres:/var/lib/postgresql/patna/data
     ports:
       - "8625:5432"
     networks:
