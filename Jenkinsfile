@@ -20,7 +20,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'patna-docker', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                 sh """
 						docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD registry.hub.docker.com
-                		docker push registry.hub.docker.com/patna/static-web:v2
+                		docker push registry.hub.docker.com/patna/api
 					  """
                 }
             }
@@ -36,6 +36,7 @@ pipeline {
 
                             ssh -o StrictHostKeyChecking=no -l ubuntu 13.229.66.4 \"
                                 cd patna/api/
+                                docker compose -f docker-compose.yaml down
                                 docker compose -f docker-compose.yaml up -d
                             \"
                         """
