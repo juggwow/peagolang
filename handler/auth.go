@@ -16,14 +16,14 @@ const (
 	secretKey = "SuperSecret"
 )
 
-type RegisterReq struct {
+type AuthReq struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
 func Register(db *db.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		req := new(RegisterReq)
+		req := new(AuthReq)
 		if err := c.BindJSON(req); err != nil {
 			sendError(c, http.StatusBadRequest, err)
 			return
@@ -56,13 +56,8 @@ func Register(db *db.DB) gin.HandlerFunc {
 	}
 }
 
-type Claims struct {
-	UserID uint `json:"user_id"`
-	jwt.StandardClaims
-}
-
 func GenerateToken(userID uint) (string, error) {
-	payload := Claims{
+	payload := claims{
 		UserID: userID,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 48).Unix(),
@@ -75,20 +70,21 @@ func GenerateToken(userID uint) (string, error) {
 
 func Login(db *db.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		req := new(RegisterReq)
+		//Bind JSON Username and Password
+		req := new(AuthReq)
 		if err := c.BindJSON(req); err != nil {
 			sendError(c, http.StatusBadRequest, err)
 			return
 		}
 
 		user, err := db.GetUser(req.Username)
-		if err != nil {
-			sendError(c, http.StatusBadRequest, err)
+		if user == nil || err != nil {
+			sendError(c, http.StatusUnauthorized, err)
 			return
 		}
 
 		if err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
-			sendError(c, http.StatusBadRequest, err)
+			sendError(c, http.StatusUnauthorized, err)
 			return
 		}
 
@@ -100,6 +96,7 @@ func Login(db *db.DB) gin.HandlerFunc {
 
 		c.IndentedJSON(http.StatusOK, gin.H{
 			"token": token,
+			"role":  user.Profile.Role,
 		})
 
 	}

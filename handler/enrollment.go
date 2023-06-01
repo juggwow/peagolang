@@ -8,8 +8,7 @@ import (
 )
 
 type EnrollmentReq struct {
-	StudentID uint `json:"student_id"`
-	ClassID   uint `json:"class_id"`
+	ClassID uint `json:"class_id"`
 }
 
 func EnrollClass(db *db.DB) gin.HandlerFunc {
@@ -24,11 +23,13 @@ func EnrollClass(db *db.DB) gin.HandlerFunc {
 			sendError(c, http.StatusBadRequest, err)
 			return
 		}
-		student, err := db.GetStudent(req.StudentID)
+
+		student, err := db.GetStudent(User(c).ID)
 		if err != nil {
 			sendError(c, http.StatusBadRequest, err)
 			return
 		}
+
 		if err := class.AddStudent(*student); err != nil {
 			sendError(c, http.StatusBadRequest, err)
 			return

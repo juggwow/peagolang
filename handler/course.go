@@ -39,6 +39,18 @@ func GetCourse(db *db.DB) gin.HandlerFunc {
 
 func CreateCourse(db *db.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+
+		trainer, err := db.GetUserByID(User(c).ID)
+		if err != nil {
+			sendError(c, http.StatusBadRequest, err)
+			return
+		}
+
+		if err := trainer.Profile.IsTrainer(); err != nil {
+			sendError(c, http.StatusBadRequest, err)
+			return
+		}
+
 		req := new(model.Course)
 		if err := c.BindJSON(req); err != nil {
 			sendError(c, http.StatusBadRequest, err)
