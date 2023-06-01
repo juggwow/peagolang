@@ -6,7 +6,7 @@ services:
     image: patna/api
     restart: always
     environment:
-      DATABASE_URL: "host=postgresql user=patnagolang password=supersecretpatnagolang dbname=patnapostgresqldb sslmode=disable"
+      DATABASE_URL: "host=postgresql user=patnagolang password=supersecretpatnagolang dbname=patnapostgresqldb port=5432 sslmode=disable"
     ports:
       - "8624:8624"
     depends_on:
