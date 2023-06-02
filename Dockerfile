@@ -23,7 +23,7 @@ WORKDIR /
 
 COPY --from=build-stage /api /api
 
-EXPOSE 8079
+EXPOSE 8624
 
 USER nonroot:nonroot
 
